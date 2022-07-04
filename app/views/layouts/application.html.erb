@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Myapp</title>
+    <title>Rails Review</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -9,8 +9,17 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
   <body>
-    <%= yield %>
+    <header class="app-title navbar navbar-expand-md navbar-light bg-light">
+      <div class="navbar-brand">
+        Rails Review
+      </div>
+    </header>
+    <div class="container">
+      <%= yield %>
+    </div>
+    <footer>
+      <small>© 2022 Ruby on Rails ReviewSite</small>
+    </footer>
   </body>
 </html>

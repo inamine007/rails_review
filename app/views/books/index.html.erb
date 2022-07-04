@@ -1,0 +1,29 @@
+<%= javascript_pack_tag 'books/index' %>
+<%= stylesheet_link_tag 'books' %>
+
+<div class="kv-area">
+
+</div>
+<div class="input-group mb-3 search-form">
+  <input type="text" class="form-control" placeholder="検索" id="search-input">
+  <button class="btn btn-outline-secondary btn-secondary" type="button" id="search"><%= image_tag 'search.png' %></button>
+</div>
+<div id="card-wrapper" class="row row-cols-auto card-wrapper">
+  <% @results['items'].each do |result| %>
+    <div class="card col-3">
+      <%= link_to("books/#{result['id']}") do %>
+        <figure><img src="<%= result['volumeInfo']['imageLinks'] ? result['volumeInfo']['imageLinks']['smallThumbnail'] : '' %>" alt="..."></figure>
+        <div class="card-body">
+          <h3 class="card-title"><%= result['volumeInfo']['title'] %></h3>
+          <p class="card-text"><%= result['volumeInfo']['authors'] ? result['volumeInfo']['authors'][0] : '' %></p>
+          <p class="star-area">
+            <span class="star5_rating" data-rate="4"></span><span class="review-count">12</span>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  <% end  %>
+</div>
+<div id="search-more" class="d-grid col-6 mx-auto <%= 'none' if @results['items'].count != 12 %> search-more">
+  <button id="search-more-btn" type="button" class="btn btn-outline-secondary">もっと見る</button>
+</div>

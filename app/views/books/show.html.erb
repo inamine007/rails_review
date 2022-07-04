@@ -1,0 +1,119 @@
+<%= javascript_pack_tag 'books/show' %>
+<%= stylesheet_link_tag 'books' %>
+
+<div class="row book-detail">
+  <div class="col-4 book-image-wrapper">
+    <figure><img src="<%= @thumbnail %>" alt=""></figure>
+    <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">お気に入りに保存</button></div>
+  </div>
+  <div class="col-8 mx-auto book-text-wrapper">
+    <h2 class="book-title"><%= @title %><span>- <%= @publishedDate %></span></h2>
+    <p class="book-autor"><%= @author %></p>
+    <p class="star-area">
+      <span class="star5_rating" data-rate="4"></span><span class="review-count">12</span>
+    </p>
+    <p class="description-label">商品の説明</p>
+    <p class="description-paragraph"><%= removeString(@description, 'シリーズをもっと見る').html_safe %></p>
+  </div>
+</div>
+<hr class="divider" size>
+<div class="row book-review">
+  <div class="col-4 review-score-wrapper">
+    <p class="star-area">
+      <span class="star5_rating" data-rate="4"></span><span class="review-count">星5つ中4.1</span>
+    </p>
+    <div class="row review-score-rate">
+      <div class="col-3">星5つ</div>
+      <div class="progress col-7">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="col-2 review-score-percentage">100%</div>
+    </div>
+    <div class="row review-score-rate">
+      <div class="col-3">星4つ</div>
+      <div class="progress col-7">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="col-2 review-score-percentage">20%</div>
+    </div>
+    <div class="row review-score-rate">
+      <div class="col-3">星3つ</div>
+      <div class="progress col-7">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="col-2 review-score-percentage">17%</div>
+    </div>
+    <div class="row review-score-rate">
+      <div class="col-3">星2つ</div>
+      <div class="progress col-7">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="col-2 review-score-percentage">0%</div>
+    </div>
+    <div class="row review-score-rate">
+      <div class="col-3">星1つ</div>
+      <div class="progress col-7">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="col-2 review-score-percentage">50%</div>
+    </div>
+    <hr class="divider" size>
+    <p class="review-label">この商品をレビュー</p>
+    <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">レビューを書く</button></div>
+  </div>
+  <div class="col-8 mx-auto review-text-wrapper">
+    <h2 class="review-heading">レビュー</h2>
+    <div class="review-box">
+      <div class="d-flex align-items-center">
+        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
+        <p>ほげ太郎</p>
+      </div>
+      <p class="star-area">
+        <span class="star5_rating" data-rate="4"></span>
+        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
+      </p>
+      <p class="review-date">2022年6月1日にレビュー</p>
+      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
+      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
+    </div>
+    <div class="review-box">
+      <div class="d-flex align-items-center">
+        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
+        <p>ほげ太郎</p>
+      </div>
+      <p class="star-area">
+        <span class="star5_rating" data-rate="4"></span>
+        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
+      </p>
+      <p class="review-date">2022年6月1日にレビュー</p>
+      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
+      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
+    </div>
+    <div class="review-box">
+      <div class="d-flex align-items-center">
+        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
+        <p>ほげ太郎</p>
+      </div>
+      <p class="star-area">
+        <span class="star5_rating" data-rate="4"></span>
+        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
+      </p>
+      <p class="review-date">2022年6月1日にレビュー</p>
+      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
+      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
+    </div>
+    <div class="review-box">
+      <div class="d-flex align-items-center">
+        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
+        <p>ほげ太郎</p>
+      </div>
+      <p class="star-area">
+        <span class="star5_rating" data-rate="4"></span>
+        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
+      </p>
+      <p class="review-date">2022年6月1日にレビュー</p>
+      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
+      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
+    </div>
+  </div>
+</div>

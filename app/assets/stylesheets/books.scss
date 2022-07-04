@@ -1,0 +1,133 @@
+// Place all the styles related to the books controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.kv-area {
+  max-width: 1080px;
+  height: 300px;
+  background-color: antiquewhite;
+  margin-bottom: 48px;
+}
+.search-form {
+  max-width: 497px;
+  margin: 0 auto;
+  img {
+    width: 24px;
+    height: auto;
+  }
+}
+.card-wrapper {
+  margin-left: -24px;
+  .card {
+    width: 250px;
+    margin-left: 23px;
+    margin-top: 40px;
+    figure {
+      height: 267px;
+      overflow: hidden;
+    }
+    .card-body {
+      .card-title {
+        font-size: 14px;
+      }
+      .card-text {
+        font-size: 12px;
+      }
+      .star-area {
+        margin-top: 8px;
+        .review-count {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+.search-more {
+  margin-top: 40px;
+}
+
+.book-detail {
+  margin-top: 64px;
+  .book-image-wrapper {
+    max-width: 300px;
+    figure {
+      margin-bottom: 8px;
+    }
+  }
+  .book-text-wrapper {
+    max-width: 668px;
+    .book-title {
+      font-size: 28px;
+      margin-bottom: 12px;
+      span {
+        font-size: 22px;
+        margin-left: 24px;
+      }
+    }
+    .book-autor {
+      margin-bottom: 8px;
+    }
+    .star-area {
+      margin-bottom: 34px;
+    }
+    .description-label {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+  }
+}
+.book-review {
+  .review-score-wrapper {
+    max-width: 300px;
+    padding-top: 30px;
+    .star-area {
+      margin-bottom: 24px;
+    }
+    .review-score-rate {
+      margin-bottom: 8px;
+      .progress {
+        padding: 0;
+      }
+      .review-score-percentage {
+        text-align: right;
+        padding: 0;
+      }
+    }
+    .divider {
+      margin: 24px 0;
+    }
+    .review-label {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+  }
+  .review-text-wrapper {
+    max-width: 668px;
+    .review-heading {
+      font-size: 22px;
+      margin-bottom: 24px;
+    }
+    .review-box {
+      margin-bottom: 20px;
+      figure {
+        width: 50px;
+        height: 50px;
+        margin-right: 16px;
+        img {
+          border-radius: 50%;
+        }
+      }
+      .star-area {
+        margin-top: 8px;
+      }
+      .review-date {
+        font-size: 12px;
+        margin-top: 8px;
+      }
+      .review-description {
+        margin-top: 12px;
+        font-size: 14px;
+      }
+    }
+  }
+}
