@@ -1,0 +1,22 @@
+ja:
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M:%S"
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているので削除できません"
+          has_many: "%{record}が存在しているので削除できません"
+    models:
+      user: ユーザー
+    attributes:
+      user:
+        id: ID
+        last_name: 姓
+        first_name: 名
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード(確認)
+        icon: アイコン 
