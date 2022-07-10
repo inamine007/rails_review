@@ -10,8 +10,12 @@ class BooksController < ApplicationController
   end
 
   def show
-    bookId = params[:id]
-    uri = URI.parse("https://www.googleapis.com/books/v1/volumes/#{bookId}")
+    @bookId = params[:id]
+
+    @review = Review.new()
+    @reviews = Review.where(book_id: @bookId).order(created_at: "DESC")
+    
+    uri = URI.parse("https://www.googleapis.com/books/v1/volumes/#{@bookId}")
     response = Net::HTTP.get_response(uri)
     result = JSON.parse(response.body)
     @title = result['volumeInfo']['title']

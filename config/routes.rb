@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :reviews
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   delete '/logout' => 'sessions#destroy'

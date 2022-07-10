@@ -11,6 +11,7 @@ ja:
           has_many: "%{record}が存在しているので削除できません"
     models:
       user: ユーザー
+      review: レビュー
     attributes:
       user:
         id: ID
@@ -20,3 +21,8 @@ ja:
         password: パスワード
         password_confirmation: パスワード(確認)
         icon: アイコン 
+      review:
+        book_id: 書籍ID
+        title: タイトル
+        score: スコア
+        content: レビュー内容

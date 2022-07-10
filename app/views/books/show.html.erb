@@ -4,13 +4,15 @@
 <div class="row book-detail">
   <div class="col-4 book-image-wrapper">
     <figure><img src="<%= @thumbnail %>" alt=""></figure>
-    <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">お気に入りに保存</button></div>
+    <% if current_user %>
+      <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">お気に入りに保存</button></div>
+    <% end %>
   </div>
   <div class="col-8 mx-auto book-text-wrapper">
     <h2 class="book-title"><%= @title %><span>- <%= @publishedDate %></span></h2>
     <p class="book-autor"><%= @author %></p>
     <p class="star-area">
-      <span class="star5_rating" data-rate="4"></span><span class="review-count">12</span>
+      <span class="star5_rating" data-rate="<%= getAvgScore(@reviews).round.to_s %>"></span><span class="review-count"><%= @reviews.count %></span>
     </p>
     <p class="description-label">商品の説明</p>
     <p class="description-paragraph"><%= removeString(@description, 'シリーズをもっと見る').html_safe %></p>
@@ -20,100 +22,114 @@
 <div class="row book-review">
   <div class="col-4 review-score-wrapper">
     <p class="star-area">
-      <span class="star5_rating" data-rate="4"></span><span class="review-count">星5つ中4.1</span>
+      <span class="star5_rating" data-rate="<%= getAvgScore(@reviews).round.to_s %>"></span><span class="review-count">星5つ中<%= getAvgScore(@reviews).round(1) %></span>
     </p>
-    <div class="row review-score-rate">
-      <div class="col-3">星5つ</div>
-      <div class="progress col-7">
-        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+    <% 5.downto(1) do |num| %>
+      <div class="row review-score-rate">
+        <div class="col-3">星<%= num %>つ</div>
+        <div class="progress col-7">
+          <div class="progress-bar bg-info" role="progressbar" style="width: <%= getProgressScore(@reviews, num).to_s %>%" aria-valuenow="<%= getProgressScore(@reviews, num).to_s %>" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="col-2 review-score-percentage"><%= getProgressScore(@reviews, num) %>%</div>
       </div>
-      <div class="col-2 review-score-percentage">100%</div>
-    </div>
-    <div class="row review-score-rate">
-      <div class="col-3">星4つ</div>
-      <div class="progress col-7">
-        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-      <div class="col-2 review-score-percentage">20%</div>
-    </div>
-    <div class="row review-score-rate">
-      <div class="col-3">星3つ</div>
-      <div class="progress col-7">
-        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-      <div class="col-2 review-score-percentage">17%</div>
-    </div>
-    <div class="row review-score-rate">
-      <div class="col-3">星2つ</div>
-      <div class="progress col-7">
-        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-      <div class="col-2 review-score-percentage">0%</div>
-    </div>
-    <div class="row review-score-rate">
-      <div class="col-3">星1つ</div>
-      <div class="progress col-7">
-        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-      <div class="col-2 review-score-percentage">50%</div>
-    </div>
-    <hr class="divider" size>
-    <p class="review-label">この商品をレビュー</p>
-    <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">レビューを書く</button></div>
+    <% end %>
+    <% if current_user %>
+      <hr class="divider" size>
+      <p class="review-label">この商品をレビュー</p>
+      <div class="d-grid favolite-btn"><button type="button" class="btn btn-success" id="openModal">レビューを書く</button></div>
+    <% end %>
   </div>
   <div class="col-8 mx-auto review-text-wrapper">
     <h2 class="review-heading">レビュー</h2>
-    <div class="review-box">
-      <div class="d-flex align-items-center">
-        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
-        <p>ほげ太郎</p>
+    <% @reviews.each do |r| %>
+      <div class="review-box">
+        <div class="d-flex align-items-center">
+          <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
+          <p><%= "#{r.user.last_name}　#{r.user.first_name}" %></p>
+        </div>
+        <p class="star-area">
+          <span class="star5_rating" data-rate="<%= r.score.round.to_s %>"></span>
+          <span><%= r.title %></span>
+        </p>
+        <p class="review-date"><%= r.created_at.strftime('%Y年%m月')%>にレビュー</p>
+        <p class="review-description"><%= r.content %></p>
+        <% if current_user.id == r.user.id %>
+          <div class="mt-2">
+            <button type="button" class="btn btn-success btn-sm" id="editOpenModal-<%= r.id %>">編集</button>
+            <%= link_to '削除', r, method: :delete, data: { confirm: "レビューを削除します。よろしいですか？" }, class: "btn btn-danger btn-sm" %>
+          </div>
+        <% end %>
       </div>
-      <p class="star-area">
-        <span class="star5_rating" data-rate="4"></span>
-        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
-      </p>
-      <p class="review-date">2022年6月1日にレビュー</p>
-      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
-      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
-    </div>
-    <div class="review-box">
-      <div class="d-flex align-items-center">
-        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
-        <p>ほげ太郎</p>
+
+      <% if current_user.id == r.user.id %>
+        <!-- Modal -->
+        <div class="modal fade" id="editReviewModal-<%= r.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
+                <button type="button" class="btn-close close-modal"></button>
+              </div>
+              <%= form_with model: r, local: true do |f| %>
+                <div class="modal-body">
+                  <div class="form-group mb-3">
+                    <%= f.label :title, 'タイトル'%>
+                    <%= f.text_field :title, :value => r.title, class: 'form-control'%>
+                  </div>
+                  <div class="form-group mb-3 w-25">
+                    <%= f.label :score, 'スコア'%>
+                    <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], { selected: r.score }, class: "form-select" %>
+                  </div>
+                  <div class="form-group mb-3">
+                    <%= f.label :content, 'レビュー内容'%>
+                    <%= f.text_area :content, size: "30x10", :value => r.content, class: 'form-control'%>
+                  </div>
+                  <%= f.hidden_field :book_id, :value => @bookId%>
+                  <%= f.hidden_field :user_id, :value => current_user.id%>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary close-modal">閉じる</button>
+                  <%= f.submit '編集する', class: 'btn btn-primary' %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
+        <button type="button" class="btn-close close-modal"></button>
       </div>
-      <p class="star-area">
-        <span class="star5_rating" data-rate="4"></span>
-        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
-      </p>
-      <p class="review-date">2022年6月1日にレビュー</p>
-      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
-      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
-    </div>
-    <div class="review-box">
-      <div class="d-flex align-items-center">
-        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
-        <p>ほげ太郎</p>
-      </div>
-      <p class="star-area">
-        <span class="star5_rating" data-rate="4"></span>
-        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
-      </p>
-      <p class="review-date">2022年6月1日にレビュー</p>
-      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
-      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
-    </div>
-    <div class="review-box">
-      <div class="d-flex align-items-center">
-        <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
-        <p>ほげ太郎</p>
-      </div>
-      <p class="star-area">
-        <span class="star5_rating" data-rate="4"></span>
-        <span>テキストテキストテキストテキストテキストテキストテキストテキスト</span>
-      </p>
-      <p class="review-date">2022年6月1日にレビュー</p>
-      <p class="review-description">Node.jsがどんなものか概要を知っておきたくて購入。8章以降(ユニットテストとデバッグ,デプロイ,パッケージ管理等)は読まず、サードパーティーライブラリの部分も読み飛ばしたが、それでもかなり勉強になった。特に2～5章は2周した。
-      本のサイズは小さいが、本文がかなりぎっしり書きこまれており、かなりボリュームがある。仕事でNode.jsを使うことになったら、8章以降も読み込もうと思うが、概要を把握するだけなら、もっと手軽な本でも良いかもしれない。</p>
+      <%= form_with model: @review, local: true do |f| %>
+        <div class="modal-body">
+          <div class="form-group mb-3">
+            <%= f.label :title, 'タイトル'%>
+            <%= f.text_field :title, class: 'form-control'%>
+          </div>
+          <div class="form-group mb-3 w-25">
+            <%= f.label :score, 'スコア'%>
+            <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], {}, class: "form-select" %>
+          </div>
+          <div class="form-group mb-3">
+            <%= f.label :content, 'レビュー内容'%>
+            <%= f.text_area :content, size: "30x10", class: 'form-control'%>
+          </div>
+          <%= f.hidden_field :book_id, :value => @bookId%>
+          <%= f.hidden_field :user_id, :value => current_user.id%>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary close-modal">閉じる</button>
+          <%= f.submit 'レビューする', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
