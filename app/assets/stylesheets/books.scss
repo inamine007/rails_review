@@ -5,7 +5,9 @@
 .kv-area {
   max-width: 1080px;
   height: 300px;
-  background-color: antiquewhite;
+  background-image: image-url('kv-min.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
   margin-bottom: 48px;
 }
 .search-form {
@@ -15,35 +17,6 @@
     width: 24px;
     height: auto;
   }
-}
-.card-wrapper {
-  margin-left: -24px;
-  .card {
-    width: 250px;
-    margin-left: 23px;
-    margin-top: 40px;
-    figure {
-      height: 267px;
-      overflow: hidden;
-    }
-    .card-body {
-      .card-title {
-        font-size: 14px;
-      }
-      .card-text {
-        font-size: 12px;
-      }
-      .star-area {
-        margin-top: 8px;
-        .review-count {
-          margin-left: 8px;
-        }
-      }
-    }
-  }
-}
-.search-more {
-  margin-top: 40px;
 }
 
 .book-detail {

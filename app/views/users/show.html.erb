@@ -1,2 +1,40 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<%= javascript_pack_tag 'users/show' %>
+<%= stylesheet_link_tag 'users' %>
+
+<div class="mypage-header">
+  <figure>
+    <% if @user.icon.attached? %>
+      <%= image_tag @user.icon %>
+    <% else %>
+      <img src="https://placehold.jp/300x300.png" alt="">
+    <% end %>
+  </figure>
+  <p class="mt-4"><%= @user.last_name %>　<%= @user.first_name %></p>
+  <p class="mt-4"><%= @user.email %></p>
+  <%= link_to '編集', "/users/#{@user.id}/edit", class: "btn btn-success mt-4" %>
+</div>
+<hr class="divider" size>
+<div id="card-wrapper" class="row row-cols-auto card-wrapper">
+  <% @favorite_books.each do |book| %>
+    <div class="card col-3">
+      <%= link_to("/books/#{book.book_id}") do %>
+        <figure><img src="<%= book.book_image %>" alt="..."></figure>
+        <div class="card-body">
+          <h3 class="card-title"><%= book.book_name %></h3>
+          <p class="card-text"><%= book.author_name %></p>
+          <p class="star-area">
+            <% reviewArr = checkExistFavoriteReview(@reviews, book) %>
+            <% unless reviewArr.empty? %>
+              <span class="star5_rating" data-rate="<%= getAvgScore(reviewArr).round.to_s %>"></span><span class="review-count"><%= reviewArr.count %></span>
+            <% else %>
+              <span class="star5_rating" data-rate="0"></span><span class="review-count">0</span>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  <% end  %>
+</div>
+<div id="search-more" class="d-grid col-6 mx-auto <%= 'none' if @favorite_books.count != 12 %> search-more">
+  <button id="search-more-btn" type="button" class="btn btn-outline-secondary">もっと見る</button>
+</div>

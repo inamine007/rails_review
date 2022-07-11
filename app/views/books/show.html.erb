@@ -5,7 +5,21 @@
   <div class="col-4 book-image-wrapper">
     <figure><img src="<%= @thumbnail %>" alt=""></figure>
     <% if current_user %>
-      <div class="d-grid favolite-btn"><button type="button" class="btn btn-success">お気に入りに保存</button></div>
+      <% favorite_id = checkFavorite(@favorites, current_user) %>
+      <% if favorite_id.nil? %>
+        <%= form_with model: @favorite, class: 'd-grid', local: true do |f| %>
+          <%= f.hidden_field :book_id, :value => @bookId%>
+          <%= f.hidden_field :user_id, :value => current_user.id%>
+          <%= f.hidden_field :book_name, :value => @title%>
+          <%= f.hidden_field :author_name, :value => @author%>
+          <%= f.hidden_field :book_image, :value => @thumbnail%>
+          <%= f.submit 'お気に入りに保存', class: 'btn btn-success' %>
+        <% end %>
+      <% else %>
+        <div class="d-grid">
+          <%= link_to 'お気に入りから削除', "/favorites/#{favorite_id}", method: :delete, data: { confirm: "お気に入りから削除します。よろしいですか？" }, class: "btn btn-danger" %>
+        </div>
+      <% end %>
     <% end %>
   </div>
   <div class="col-8 mx-auto book-text-wrapper">
@@ -41,95 +55,111 @@
   </div>
   <div class="col-8 mx-auto review-text-wrapper">
     <h2 class="review-heading">レビュー</h2>
-    <% @reviews.each do |r| %>
-      <div class="review-box">
-        <div class="d-flex align-items-center">
-          <figure><img src="https://placehold.jp/150x150.png" alt=""></figure>
-          <p><%= "#{r.user.last_name}　#{r.user.first_name}" %></p>
-        </div>
-        <p class="star-area">
-          <span class="star5_rating" data-rate="<%= r.score.round.to_s %>"></span>
-          <span><%= r.title %></span>
-        </p>
-        <p class="review-date"><%= r.created_at.strftime('%Y年%m月')%>にレビュー</p>
-        <p class="review-description"><%= r.content %></p>
-        <% if current_user.id == r.user.id %>
-          <div class="mt-2">
-            <button type="button" class="btn btn-success btn-sm" id="editOpenModal-<%= r.id %>">編集</button>
-            <%= link_to '削除', r, method: :delete, data: { confirm: "レビューを削除します。よろしいですか？" }, class: "btn btn-danger btn-sm" %>
-          </div>
-        <% end %>
-      </div>
-
-      <% if current_user.id == r.user.id %>
-        <!-- Modal -->
-        <div class="modal fade" id="editReviewModal-<%= r.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
-                <button type="button" class="btn-close close-modal"></button>
-              </div>
-              <%= form_with model: r, local: true do |f| %>
-                <div class="modal-body">
-                  <div class="form-group mb-3">
-                    <%= f.label :title, 'タイトル'%>
-                    <%= f.text_field :title, :value => r.title, class: 'form-control'%>
-                  </div>
-                  <div class="form-group mb-3 w-25">
-                    <%= f.label :score, 'スコア'%>
-                    <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], { selected: r.score }, class: "form-select" %>
-                  </div>
-                  <div class="form-group mb-3">
-                    <%= f.label :content, 'レビュー内容'%>
-                    <%= f.text_area :content, size: "30x10", :value => r.content, class: 'form-control'%>
-                  </div>
-                  <%= f.hidden_field :book_id, :value => @bookId%>
-                  <%= f.hidden_field :user_id, :value => current_user.id%>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary close-modal">閉じる</button>
-                  <%= f.submit '編集する', class: 'btn btn-primary' %>
-                </div>
+    <% if @reviews.empty? %>
+      <p>レビューはありません。</p>
+    <% else %>
+      <% @reviews.each do |r| %>
+        <div class="review-box">
+          <div class="d-flex align-items-center">
+            <figure>
+              <% if r.user.icon.attached? %>
+                <%= image_tag r.user.icon %>
+              <% else %>
+                <img src="https://placehold.jp/150x150.png" alt="">
               <% end %>
-            </div>
+            </figure>
+            <p><%= "#{r.user.last_name}　#{r.user.first_name}" %></p>
           </div>
+          <p class="star-area">
+            <span class="star5_rating" data-rate="<%= r.score.round.to_s %>"></span>
+            <span><%= r.title %></span>
+          </p>
+          <p class="review-date"><%= r.created_at.strftime('%Y年%m月')%>にレビュー</p>
+          <p class="review-description"><%= r.content %></p>
+          <% if current_user %>
+            <% if current_user.id == r.user.id %>
+              <div class="mt-2">
+                <button type="button" class="btn btn-success btn-sm" id="editOpenModal-<%= r.id %>">編集</button>
+                <%= link_to '削除', r, method: :delete, data: { confirm: "レビューを削除します。よろしいですか？" }, class: "btn btn-danger btn-sm" %>
+              </div>
+            <% end %>
+          <% end %>
         </div>
+
+        <% if current_user %>
+          <% if current_user.id == r.user.id %>
+            <!-- Modal -->
+            <div class="modal fade" id="editReviewModal-<%= r.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
+                    <button type="button" class="btn-close close-modal"></button>
+                  </div>
+                  <%= form_with model: r, local: true do |f| %>
+                    <div class="modal-body">
+                      <div class="form-group mb-3">
+                        <%= f.label :title, 'タイトル'%>
+                        <%= f.text_field :title, :value => r.title, class: 'form-control'%>
+                      </div>
+                      <div class="form-group mb-3 w-25">
+                        <%= f.label :score, 'スコア'%>
+                        <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], { selected: r.score }, class: "form-select" %>
+                      </div>
+                      <div class="form-group mb-3">
+                        <%= f.label :content, 'レビュー内容'%>
+                        <%= f.text_area :content, size: "30x10", :value => r.content, class: 'form-control'%>
+                      </div>
+                      <%= f.hidden_field :book_id, :value => @bookId%>
+                      <%= f.hidden_field :user_id, :value => current_user.id%>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary close-modal">閉じる</button>
+                      <%= f.submit '編集する', class: 'btn btn-primary' %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
   </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
-        <button type="button" class="btn-close close-modal"></button>
+<% if current_user %>
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">レビュー</h5>
+          <button type="button" class="btn-close close-modal"></button>
+        </div>
+        <%= form_with model: @review, local: true do |f| %>
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <%= f.label :title, 'タイトル'%>
+              <%= f.text_field :title, class: 'form-control'%>
+            </div>
+            <div class="form-group mb-3 w-25">
+              <%= f.label :score, 'スコア'%>
+              <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], {}, class: "form-select" %>
+            </div>
+            <div class="form-group mb-3">
+              <%= f.label :content, 'レビュー内容'%>
+              <%= f.text_area :content, size: "30x10", class: 'form-control'%>
+            </div>
+            <%= f.hidden_field :book_id, :value => @bookId%>
+            <%= f.hidden_field :user_id, :value => current_user.id%>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close-modal">閉じる</button>
+            <%= f.submit 'レビューする', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
       </div>
-      <%= form_with model: @review, local: true do |f| %>
-        <div class="modal-body">
-          <div class="form-group mb-3">
-            <%= f.label :title, 'タイトル'%>
-            <%= f.text_field :title, class: 'form-control'%>
-          </div>
-          <div class="form-group mb-3 w-25">
-            <%= f.label :score, 'スコア'%>
-            <%= f.select :score, [['1', 1], ['2', 2],['3', 3], ['4', 4],['5', 5]], {}, class: "form-select" %>
-          </div>
-          <div class="form-group mb-3">
-            <%= f.label :content, 'レビュー内容'%>
-            <%= f.text_area :content, size: "30x10", class: 'form-control'%>
-          </div>
-          <%= f.hidden_field :book_id, :value => @bookId%>
-          <%= f.hidden_field :user_id, :value => current_user.id%>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary close-modal">閉じる</button>
-          <%= f.submit 'レビューする', class: 'btn btn-primary' %>
-        </div>
-      <% end %>
     </div>
   </div>
-</div>
+<% end %>

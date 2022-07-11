@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
+  has_one_attached :icon
 
   validates :last_name, presence: true
   validates :first_name, presence: true
@@ -7,4 +8,5 @@ class User < ApplicationRecord
 
   
   has_many :reviews
+  has_many :favorites
 end

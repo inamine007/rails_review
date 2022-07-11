@@ -22,15 +22,18 @@ $(function () {
   /**
    * Google Books APIから返ってきた値をもとにcardを生成する
    * @type {object} data - Google Books APIからの返り値
+   * @type {object} reviews - レビュー全データ
    * @return carddom
    */
-  function domGenerate(data) {
+  function domGenerate(data, reviews) {
     let dom = '';
     let homeUrl = location.origin;
     for(let i =0; i < data.items.length; i++) {
       let image = data.items[i].volumeInfo.imageLinks ? data.items[i].volumeInfo.imageLinks.smallThumbnail : '';
       let title = data.items[i].volumeInfo.title ? data.items[i].volumeInfo.title : '';
       let author = data.items[i].volumeInfo.authors ? data.items[i].volumeInfo.authors[0] : '';
+      let reviewsArr = checkExistReview(reviews, data.items[i]);
+      let score = reviewsArr.length ? getAvgScore(reviewsArr) : 0;
       dom += `
       <div class="card col-3">
         <a href="${homeUrl}/books/${data.items[i].id}">
@@ -39,12 +42,28 @@ $(function () {
             <h3 class="card-title">${title}</h3>
             <p class="card-text">${author}</p>
             <p class="star-area">
-              <span class="star5_rating" data-rate="4"></span><span class="review-count">12</span>
+              <span class="star5_rating" data-rate="${Math.round(score)}"></span><span class="review-count">${reviewsArr.length}</span>
             </p>
           </div>
         </a>
       </div>
       `;
+    }
+
+    // books_helper.rbと内容は同じ関数
+    function checkExistReview(reviews, book) {
+      let reviewsArr = [];
+      for(let i=0; i < reviews.length; i++) {
+        if(reviews[i].book_id === book.id) reviewsArr.push(reviews[i]);
+      }
+      return reviewsArr
+    }
+    function getAvgScore(reviews) {
+      let num = 0;
+      for(let i=0; i < reviews.length; i++) {
+        num += Number(reviews[i].score);
+      }
+      return score = num / reviews.length;
     }
     return dom;
   }
@@ -58,7 +77,8 @@ $(function () {
       url: `${g_booksApiUrl}?q=${searchString}&maxResults=${g_maxNum}&startIndex=${startIndex}`,
       dataType: "json"
     }).done(function(data){
-      let dom = domGenerate(data);
+      let reviews = $('input[name="reviews"]').val();
+      let dom = domGenerate(data, JSON.parse(reviews));
       $('#card-wrapper').append(dom);
       if(data.items.length === g_maxNum) {
         g_pageCount++

@@ -1,6 +1,12 @@
 class UsersController < ApplicationController
   def show
-    before_action :login_required
+    login_required
+    @user = User.find(params[:id])
+    redirect_to root_path unless current_user.id == @user.id
+
+    @favorite_books = Favorite.where(user_id: @user.id).order(created_at: "DESC")
+
+    @reviews = Review.all
   end
 
   def new
@@ -18,6 +24,36 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    if params[:icon].nil?
+      if params[:password].empty? && params[:password_confirmation].empty?
+        def update_params
+          params.permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :email)
+        end
+      else
+        def update_params
+          params.permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :email, :password, :password_confirmation)
+        end
+      end 
+    elsif params[:password].empty? && params[:password_confirmation].empty?
+      def update_params
+        params.permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :email, :icon)
+      end
+    else
+      def update_params
+        params.permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :email, :icon, :password, :password_confirmation)
+      end
+    end
+
+    if @user.update(update_params)
+      redirect_to "/users/#{@user.id}", notice: "編集しました。"
+    else
+      render :edit
+    end
   end
 
   private

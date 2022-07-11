@@ -44,6 +44,36 @@ footer {
   background: rgba(0, 0, 0, 0.5);
 }
 
+.card-wrapper {
+  margin-left: -24px;
+  .card {
+    width: 250px;
+    margin-left: 23px;
+    margin-top: 40px;
+    figure {
+      height: 267px;
+      overflow: hidden;
+    }
+    .card-body {
+      .card-title {
+        font-size: 14px;
+      }
+      .card-text {
+        font-size: 12px;
+      }
+      .star-area {
+        margin-top: 8px;
+        .review-count {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+.search-more {
+  margin-top: 40px;
+}
+
 .star5_rating{
   position: relative;
   z-index: 0;

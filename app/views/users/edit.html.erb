@@ -1,2 +1,50 @@
-<h1>Users#edit</h1>
-<p>Find me in app/views/users/edit.html.erb</p>
+<%= stylesheet_link_tag 'users' %>
+
+<% if @user.errors.present? %>
+  <ul class="error_messages">
+    <% @user.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+<div class="form-wrapper">
+  <%= form_with url: "/users/#{@user.id}", local: true, method: :put do |f| %>
+    <div class="row mb-3">
+      <div class="form-group col">
+        <%= f.label :last_name, '姓'%>
+        <%= f.text_field :last_name, :value => @user.last_name, class: 'form-control'%>
+      </div>
+      <div class="form-group col">
+        <%= f.label :first_name, '名'%>
+        <%= f.text_field :first_name, :value => @user.first_name, class: 'form-control'%>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-group col">
+        <%= f.label :last_name_kana, 'カナ'%>
+        <%= f.text_field :last_name_kana, :value => @user.last_name_kana, class: 'form-control'%>
+      </div>
+      <div class="form-group col">
+        <%= f.label :first_name_kana, 'カナ'%>
+        <%= f.text_field :first_name_kana, :value => @user.first_name_kana, class: 'form-control'%>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <%= f.label :email, 'メールアドレス'%>
+      <%= f.text_field :email, :value => @user.email, class: 'form-control'%>
+    </div>
+    <div class="form-group mb-3">
+      <%= f.label :icon, 'アイコン'%>
+      <%= f.file_field :icon, :value => @user.icon, class: 'form-control'%>
+    </div>
+    <div class="form-group mb-3">
+      <%= f.label :password, 'パスワード'%>
+      <%= f.password_field :password, class: 'form-control'%>
+    </div>
+    <div class="form-group mb-3">
+      <%= f.label :password_confirmation, 'パスワード(確認)'%>
+      <%= f.password_field :password_confirmation, class: 'form-control'%>
+    </div>
+    <%= f.submit '更新する', class: 'btn btn-primary' %>
+  <% end %>
+</div>

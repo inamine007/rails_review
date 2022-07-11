@@ -12,3 +12,19 @@
 footer {
   display: none;
 }
+
+.mypage-header {
+  margin-top: 64px;
+  text-align: center;
+  figure {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    img {
+      border-radius: 50%;
+    }
+  }
+  p {
+    font-size: 24px;
+  }
+}
